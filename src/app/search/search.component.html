@@ -1,0 +1,47 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <div fxHide.xs>
+      <span>Github Profile Viewer</span>
+    </div>
+    <!-- for extra small screen or mobiles -->
+    <div fxShow.xs fxHide>
+      <span>GPV</span>
+    </div>
+    <div fxFlex>
+      <div fxLayout="row" fxLayoutAlign="end end">
+        <form #searchForm="ngForm" (ngSubmit)="Search(searchForm)">
+          <mat-form-field>
+            <input matInput placeholder="Search" name="search" ngModel>
+          </mat-form-field>
+          <mat-icon type="submit" (click)="Search(searchForm)" class="btn btn-success" class="icon">search</mat-icon>
+        </form>
+      </div>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container" fxLayout="column" fxLayoutGap="10px" style="height:100%;">
+  <h2 class="h2tag" *ngIf="!searchFlag">Organizations</h2>
+  <div class="row" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
+    [scrollWindow]="true">
+    <div fxFlex *ngIf="profileList">
+      <mat-grid-list [cols]="nbCols" rowHeight="200px">
+        <mat-grid-tile *ngFor="let profile of profileList">
+          <!--attach the username with route-->
+          <mat-card [routerLink]="['/profile', profile.login]" style="cursor: pointer; box-shadow: 0px 0px 10px grey">
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+              <img mat-card-avatar style="height: 100px;width: 90px;" src="{{profile.avatar_url}}" alt={{profile.login}}>
+              <mat-card-title>@{{profile.login}}</mat-card-title>
+            </div>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </div>
+
+  <!-- display only when loading -->
+  <div [hidden]="profileList != ''">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <mat-spinner></mat-spinner>
+      <h4>Loading . . . Please Wait</h4>
+    </div>
+  </div>

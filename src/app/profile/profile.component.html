@@ -1,0 +1,74 @@
+<div fxLayout="column" *ngIf="profile">
+  <mat-card fxFill>
+    <mat-card fxFlex="100" style="box-shadow: 0px 0px 20px grey">
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <!-- profile image for medium large extra large screens -->
+        <div fxFlex="20">
+          <div fxShow fxHide.xs="true">
+            <img mat-card-avatar style="height: 250px;width: 250px; margin-top:15px" src="{{profile.avatar_url}}" alt={{profile.login}}>
+          </div>
+        </div>
+        <!-- profile image for medium extra small screens -->
+        <div fxFlex="20" fxHide fxShow.xs>
+          <img mat-card-avatar style="height: 150px;width: 150px; margin-top:15px" src="{{profile.avatar_url}}" alt={{profile.login}}>
+        </div>
+        <div fxFlex>
+          <h2><strong>{{profile.name}}</strong></h2>
+          <h5>@{{profile.login}}</h5>
+        </div>
+      </div>
+
+      <!-- if bio or company are not null -->
+      <div *ngIf="profile.bio || profile.company" fxFlexAlign="center">
+        <mat-card fxFlex="100" style="box-shadow: 0px 0px 10px grey">
+          <!-- if bio is not null -->
+          <div *ngIf="profile.bio">
+            <h3><strong>Bio:</strong></h3>
+            <p>{{profile.bio}}</p>
+          </div>
+          <!-- if company is not null -->
+          <div *ngIf="profile.company">
+            <h3><strong>Works at</strong></h3>
+            <p>{{profile.company}}</p>
+          </div>
+        </mat-card>
+
+      </div>
+      <div fxLayout="row">
+        <mat-card fxFlex="100" fxLayout.xs="column" style="box-shadow: 0px 0px 10px grey">
+          <div fxFlex="50">
+            <h3>Repositories</h3>
+            <p>{{profile.public_repos}}</p>
+          </div>
+          <div fxFlex="50">
+            <h3>Follower's</h3>
+            <p>{{profile.followers}}</p>
+          </div>
+        </mat-card>
+      </div>
+      <div>
+        <mat-card fxFlex="100" style="box-shadow: 0px 0px 10px grey">
+          <h3>Published Repositories</h3>
+          <!-- display when no repositries found -->
+          <p *ngIf="profile.public_repos == 0">No repositories found!</p>
+          <mat-grid-list [cols]="nbCols" style="flex-wrap: wrap" rowHeight="200px">
+            <!-- looop for repositries -->
+            <mat-grid-tile *ngFor="let repo of repos">
+              <mat-card style="height:100px ;box-shadow: 0px 0px 10px grey">
+                <mat-card-title>{{repo.name}}</mat-card-title>
+                <mat-card-subtitle class="desc">{{repo.description}}</mat-card-subtitle>
+              </mat-card>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </mat-card>
+      </div>
+    </mat-card>
+  </mat-card>
+</div>
+<!-- display only when loading the data -->
+<div [hidden]="profile">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+    <h4>Loading . . . Please Wait</h4>
+  </div>
+</div>
